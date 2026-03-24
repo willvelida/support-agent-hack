@@ -30,9 +30,17 @@ You also need to be authenticated with Azure. The API uses `DefaultAzureCredenti
 
 ### 1. Clone the repository
 
+The `servicenow-mcp` directory is a Git submodule. Use `--recurse-submodules` to pull it automatically:
+
 ```bash
-git clone https://github.com/willvelida/support-agent-hack.git
+git clone --recurse-submodules https://github.com/willvelida/support-agent-hack.git
 cd support-agent-hack
+```
+
+If you already cloned without the flag, initialise the submodule manually:
+
+```bash
+git submodule update --init --recursive
 ```
 
 ### 2. Configure the API
