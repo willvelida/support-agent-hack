@@ -1,0 +1,129 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using Microsoft.Extensions.AI
+@using SupportTicketAgent.UI.Services
+@inject AgentChatService ChatService
+@inject IJSRuntime JS
+
+<PageTitle>Support Ticket Agent</PageTitle>
+
+<div class="chat-container" @ref="_chatContainer">
+    @foreach (var msg in _messages)
+    {
+        <div class="message @msg.Role">
+            <div class="message-content">@msg.Text</div>
+        </div>
+    }
+
+    @if (_isStreaming)
+    {
+        <div class="message assistant streaming">
+            <div class="message-content">@_currentResponse</div>
+        </div>
+    }
+</div>
+
+<div class="input-area">
+    <EditForm Model="_inputModel" OnValidSubmit="SendMessage" FormName="chat-form">
+        <div class="input-row">
+            <InputText @bind-Value="_inputModel.Message"
+                       placeholder="Ask about support tickets..."
+                       disabled="@_isStreaming"
+                       @ref="_inputRef" />
+            <button type="submit" disabled="@(_isStreaming || string.IsNullOrWhiteSpace(_inputModel.Message))">
+                @(_isStreaming ? "..." : "Send")
+            </button>
+        </div>
+    </EditForm>
+    <button class="reset-btn" @onclick="ResetConversation" disabled="@_isStreaming">New Conversation</button>
+</div>
+
+@code {
+    private readonly List<ChatMessageDisplay> _messages = [
+        new("assistant", """
+            Hello! I'm your BHP IT Incident Assistant. I can help you with:
+            • Getting an overview or summary of all incidents
+            • Looking up a specific incident (e.g., "Show me INC3500238")
+            • Searching incidents by keyword (e.g., "VPN", "certificate")
+            • Filtering by priority, site, category, or state
+            • Analysing incident clusters for recurring patterns
+            What would you like to know?
+            """)
+    ];
+
+    private readonly List<ChatMessage> _agentMessages = [
+        new(ChatRole.System, "You are a BHP IT incident management assistant.")
+    ];
+
+    private InputModel _inputModel = new();
+    private bool _isStreaming;
+    private string _currentResponse = string.Empty;
+    private ElementReference _chatContainer;
+    private InputText? _inputRef;
+
+    private async Task SendMessage()
+    {
+        var userText = _inputModel.Message?.Trim();
+        if (string.IsNullOrEmpty(userText)) return;
+
+        // Add user message
+        _messages.Add(new("user", userText));
+        _agentMessages.Add(new ChatMessage(ChatRole.User, userText));
+        _inputModel = new();
+        _isStreaming = true;
+        _currentResponse = string.Empty;
+        StateHasChanged();
+        await ScrollToBottom();
+
+        try
+        {
+            await foreach (var chunk in ChatService.StreamResponseAsync(_agentMessages))
+            {
+                _currentResponse += chunk;
+                StateHasChanged();
+                await ScrollToBottom();
+            }
+
+            // Finalize assistant message
+            if (!string.IsNullOrEmpty(_currentResponse))
+            {
+                _messages.Add(new("assistant", _currentResponse));
+                _agentMessages.Add(new ChatMessage(ChatRole.Assistant, _currentResponse));
+            }
+        }
+        catch (Exception ex)
+        {
+            _messages.Add(new("assistant error",
+                $"Error communicating with the agent. Is the API server running?\n{ex.Message}"));
+        }
+        finally
+        {
+            _isStreaming = false;
+            _currentResponse = string.Empty;
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private void ResetConversation()
+    {
+        _messages.Clear();
+        _agentMessages.Clear();
+        _agentMessages.Add(new ChatMessage(ChatRole.System, "You are a BHP IT incident management assistant."));
+        _messages.Add(new("assistant", "Conversation reset. How can I help you?"));
+        ChatService.ResetSession();
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(50); // let DOM update
+        await JS.InvokeVoidAsync("scrollToBottom", _chatContainer);
+    }
+
+    private sealed class InputModel
+    {
+        public string? Message { get; set; }
+    }
+
+    private sealed record ChatMessageDisplay(string Role, string Text);
+}

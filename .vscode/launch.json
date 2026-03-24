@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch API (AG-UI Server)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-api",
+      "program": "${workspaceFolder}/src/api/SupportTicketAgent/bin/Debug/net10.0/SupportTicketAgent.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/api/SupportTicketAgent",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    {
+      "name": "Launch UI (Blazor)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-ui",
+      "program": "${workspaceFolder}/src/ui/SupportTicketAgent.UI/bin/Debug/net10.0/SupportTicketAgent.UI.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/ui/SupportTicketAgent.UI",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Launch API + UI",
+      "configurations": ["Launch API (AG-UI Server)", "Launch UI (Blazor)"]
+    }
+  ]
+}

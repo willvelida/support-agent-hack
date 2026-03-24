@@ -1,0 +1,99 @@
+# Environment files
+.env
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.rsuser
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+*.VisualState.xml
+TestResult.xml
+[Tt]est[Rr]esult*/
+*.Cache
+!*.[Cc]ache/
+
+# MSTest
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+**/[Pp]ackages/
+*.nupkg
+**/project.lock.json
+**/project.fragment.lock.json
+
+# Build results
+[Dd]ebugPS/
+[Rr]eleasePS/
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# CodeRush
+.cr/
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Installshield
+[Ee]xpress/
+
+# Publish profiles
+*.publishsettings
+*.pubxml
+!**/[Pp]ublish[Pp]rofiles/*.pubxml
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+*.egg
+
+# Ignore local csv file
+/data/*.csv

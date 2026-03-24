@@ -1,0 +1,102 @@
+{
+  "name": "Agentic Intent PoC",
+  // https://github.com/devcontainers/images/tree/main/src/base-ubuntu
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "remoteUser": "vscode",
+  "privileged": false,
+  "shutdownAction": "stopContainer",
+  "init": true,
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "editor.tabSize": 2
+      },
+      "extensions": [
+        /* ---------------------------------------------------------------------------
+           GitHub Copilot
+        --------------------------------------------------------------------------- */
+        "GitHub.copilot",
+        // Provides AI-assisted code completions and inline suggestions tailored to
+        // the context of the file you're editing.
+
+        "GitHub.copilot-chat",
+        // Adds a chat-based Copilot interface for conversational guidance and
+        // code explanations.
+
+        /* ---------------------------------------------------------------------------
+           Markdown and Documentation
+        --------------------------------------------------------------------------- */
+        "yzhang.markdown-all-in-one",
+        // Common markdown conveniences: shortcuts, TOC generation, export commands.
+
+        "DavidAnson.vscode-markdownlint",
+        // Markdownlint rules for consistent style guidelines.
+
+        "bierner.markdown-yaml-preamble",
+        // Render YAML front matter in markdown preview.
+
+        /* ---------------------------------------------------------------------------
+           Code Quality and Spelling
+        --------------------------------------------------------------------------- */
+        "streetsidesoftware.code-spell-checker",
+        // Inline spell checking for technical writing.
+
+        "streetsidesoftware.code-spell-checker-australian-english",
+        // Australian English dictionary for Code Spell Checker.
+
+        /* ---------------------------------------------------------------------------
+           Formatting
+        --------------------------------------------------------------------------- */
+        "esbenp.prettier-vscode",
+        // Prettier formatter for markdown and other supported formats.
+
+        /* ---------------------------------------------------------------------------
+           C# and .NET Development
+        --------------------------------------------------------------------------- */
+        "ms-dotnettools.csharp",
+        // C# language support: IntelliSense, debugging, code navigation.
+
+        "ms-dotnettools.csdevkit",
+        // C# Dev Kit: solution explorer, test runner, project management.
+
+        "ms-dotnettools.vscode-dotnet-runtime",
+        // .NET runtime acquisition for VS Code extensions that depend on .NET.
+
+        /* ---------------------------------------------------------------------------
+           Azure Tools
+        --------------------------------------------------------------------------- */
+        "ms-vscode.azure-account"
+        // Azure Account sign-in for DefaultAzureCredential and Azure CLI integration.
+      ]
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "10.0"
+    },
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "2.67"
+    }
+  },
+
+  "forwardPorts": [5100, 5200],
+  "portsAttributes": {
+    "5100": {
+      "label": "API (AG-UI Server)",
+      "onAutoForward": "notify"
+    },
+    "5200": {
+      "label": "Blazor UI",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+
+  "mounts": []
+}
