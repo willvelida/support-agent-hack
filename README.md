@@ -9,24 +9,7 @@ An agentic IT incident management assistant that combines a Blazor Server UI, an
 
 ## Architecture
 
-```text
-┌──────────────────────────────────────────┐
-│        Blazor Server UI (:5200)          │
-└────────────────┬─────────────────────────┘
-                 │ HTTP
-                 ▼
-┌──────────────────────────────────────────┐
-│     Agent API  (:5100)                   │
-│  ASP.NET Core + Azure OpenAI + AG-UI     │
-│  Local CSV tools + MCP client            │
-└────────────────┬─────────────────────────┘
-                 │ SSE / MCP
-                 ▼
-┌──────────────────────────────────────────┐
-│   ServiceNow MCP Server (:8080)          │
-│   Python · Starlette · Uvicorn           │
-└──────────────────────────────────────────┘
-```
+![](./docs/diagram.png)
 
 ## Prerequisites
 
